@@ -14,33 +14,32 @@ import java.util.Set;
  */
 public class FreemazonMain {
     private static Set<String> readStrings(File file) throws IOException {
-        final Set<String> strings = new HashSet<String>();
+        final Set<String> strings = new HashSet<>();
         
-        final BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
+        try (final BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
                     strings.add(line);
                 }
             }
-        } finally {
-            br.close();
         }
         
         return strings;
     }
     
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.out.println("Usage: FreemazonMain <asin>");
+        if (args.length != 2) {
+            System.out.println("Usage: FreemazonMain <booksPath> <asin>");
             return;
         }
 
-        final String asin = args[0];
+        final File booksPath = new File(args[0]);
+        System.out.println("== booksPath: " + booksPath + " ==");
+        final String asin = args[1];
         System.out.println("== asin: " + asin + " ==");
 
-        BookDownloader downloader = new BookDownloader(null, asin);
+        BookDownloader downloader = new BookDownloader(booksPath, null, asin);
         downloader.printInfo();
 
         Set<String> nextQueries = readStrings(WORD_LIST_FILE);
@@ -59,13 +58,13 @@ public class FreemazonMain {
 
         for (String authCookie : readStrings(COOKIES_FILE)) {
             System.out.println("== next user: " + authCookie + " ==");
-            downloader = new BookDownloader(authCookie, asin);
+            downloader = new BookDownloader(booksPath, authCookie, asin);
 
             downloader.retrieveImageUrls();
             downloader.printInfo();
         }
 
-        downloader = new BookDownloader(null, asin);
+        downloader = new BookDownloader(booksPath, null, asin);
         downloader.saveImages();
         downloader.printInfo();
     }

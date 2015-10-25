@@ -4,15 +4,8 @@ import com.amazon.BookData;
 import com.amazon.BookPages;
 import com.amazon.BookSearchResults;
 import com.amazon.SitbClient;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,11 +20,19 @@ import java.util.StringTokenizer;
  * @author DL
  */
 public class BookDownloader {
-    public BookDownloader(String authCookie, String asin) throws Exception {
+    private static final String downloadDataFilename = "book.data";
+
+    private final File booksPath;
+    private final SitbClient sitbClient;
+    private final String asin;
+    private final BookDownloadData downloadData;
+
+    public BookDownloader(File booksPath, String authCookie, String asin) throws Exception {
+        this.booksPath = booksPath;
         sitbClient = new SitbClient(authCookie);
         this.asin = asin;
 
-        final File downloadDataFile = new File(bookDir() + downloadDataFilename);
+        final File downloadDataFile = new File(bookDir(), downloadDataFilename);
         if (!downloadDataFile.exists()) {
             final BookData bookData = sitbClient.getBookData(asin);
             if (bookData.sampleSearches != null) {
@@ -68,23 +69,19 @@ public class BookDownloader {
         }
     }
 
-    private String booksDir() {
-        return "books/";
+    private File bookDir() {
+        return new File(booksPath, asin);
     }
 
-    private String bookDir() {
-        return booksDir() + asin + "/";
-    }
-
-    private String pagesDir() {
-        return bookDir() + downloadData.bookTitle().replaceAll("[^a-zA-Z0-9'&\\s\\-]", "") + "/";
+    private File pagesDir() {
+        return new File(bookDir(), downloadData.bookTitle().replaceAll("[^a-zA-Z0-9'&\\s\\-]", ""));
     }
 
     private void serialize() throws IOException {
-        final File pagesDir = new File(pagesDir());
+        final File pagesDir = pagesDir();
         pagesDir.mkdirs();
 
-        final FileOutputStream fos = new FileOutputStream(bookDir() + downloadDataFilename);
+        final FileOutputStream fos = new FileOutputStream(new File(bookDir(), downloadDataFilename));
         final ObjectOutputStream oos = new ObjectOutputStream(fos);
         try {
             oos.writeObject(downloadData);
@@ -159,7 +156,7 @@ public class BookDownloader {
                         serialize();
                     }
                     break;
-                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
                     System.out.println("Error getting imageUrl for page " + page + " on try " + i + ".");
                 }
             }
@@ -172,21 +169,23 @@ public class BookDownloader {
         for (Entry<Integer, String> entry : downloadData.pageImages().entrySet()) {
             final Integer page = entry.getKey();
             final String imageUrl = entry.getValue();
-            
-            for (int i = 1; i <= NUM_TRIES; ++i) {
-                try {
-                    saveToFile(imageUrl, pagesDir() + page);
-                    downloadData.onGotPage(page);
-                    serialize();
-                    break;
-                } catch (FileNotFoundException e) {
-                    System.out.println("Error getting page " + page + " on try " + i + ".");
+
+            if (!imageUrl.isEmpty()) {
+                for (int i = 1; i <= NUM_TRIES; ++i) {
+                    try {
+                        saveToFile(imageUrl, new File(pagesDir(), page.toString()));
+                        downloadData.onGotPage(page);
+                        serialize();
+                        break;
+                    } catch (IOException e) {
+                        System.out.println("Error getting page " + page + " on try " + i + ".");
+                    }
                 }
             }
         }
     }
 
-    private static void saveToFile(String imageUrl, String filenameNoExt) throws Exception {
+    private static void saveToFile(String imageUrl, File filenameNoExt) throws Exception {
         URL url = null;
         try {
             url = new URL(imageUrl);
@@ -209,7 +208,7 @@ public class BookDownloader {
 
         final BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
         try {
-            final FileOutputStream fos = new FileOutputStream(filenameNoExt + "." + imageType);
+            final FileOutputStream fos = new FileOutputStream(filenameNoExt.getPath() + "." + imageType);
             final BufferedOutputStream bos = new BufferedOutputStream(fos);
             try {
                 byte[] buffer = new byte[4096];
@@ -224,10 +223,4 @@ public class BookDownloader {
             bis.close();
         }
     }
-
-    private final SitbClient sitbClient;
-    private final String asin;
-    private final BookDownloadData downloadData;
-
-    private static final String downloadDataFilename = "book.data";
 }
