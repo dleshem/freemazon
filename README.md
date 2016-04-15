@@ -1,7 +1,7 @@
 freemazon
 =========
 
-Amazon book downloader, written in Java.
+Amazon book downloader, written in JavaScript.
 
 Freemazon is a semi-automated framework to extract scanned book pages from Amazon, using its SITB (search-inside-the-book) API.
 

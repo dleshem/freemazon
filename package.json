@@ -1,0 +1,48 @@
+{
+  "name": "freemazon",
+  "version": "1.0.0",
+  "description": "Amazon Book Downloader",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-register",
+    "prepublish": "npm test && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dleshem/freemazon.git"
+  },
+  "keywords": [
+	"freemazon",
+    "amazon",
+    "book",
+	"downloader"
+  ],
+  "author": "Danny Leshem <dleshem@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/dleshem/freemazon/issues"
+  },
+  "homepage": "https://github.com/dleshem/freemazon",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-strict-mode": "^6.6.5",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-register": "^6.7.2",
+    "chai": "^3.5.0",
+    "lodash": "^4.8.2",
+    "mocha": "^2.4.5",
+    "webpack": "^1.12.0",
+    "request": "^2.70.0",
+	"amazon-sitb": "^2.0.0",
+	"html-entities": "^1.2.0"
+  },
+  "dependencies": {},
+  "directories": {
+    "test": "test"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}
