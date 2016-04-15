@@ -56,7 +56,6 @@ const mkdir = (path) => {
 
 const fetch = (url) => {
 	return new Promise((resolve, reject) => {
-		console.log(url)
 		request.get({uri: url, encoding: null}, (error, response, body) => {
 			if (!error && (response.statusCode === 200)) {
 				resolve({
