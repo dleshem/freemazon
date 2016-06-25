@@ -88,7 +88,7 @@ export default class BookDownloadData {
 	
 	onPageImages(pageImages) {
 		_.each(pageImages, (imageUrl, page) => {
-			if (!this._gotPages[page]) {
+			if (!this._gotPages[page] && imageUrl) {
 				delete this._unseenPages[page]
 				delete this._pageTokens[page]
 				this._pageImages[page] = imageUrl
