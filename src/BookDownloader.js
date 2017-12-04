@@ -147,7 +147,11 @@ export default class BookDownloader {
 					this._bookDownloadData.onSuggestedQuery(suggestedQuery)
 				})
 				return this._serialize()
-			})
+			}, e => {
+                // Search query is weird? Not much to do.
+				this._bookDownloadData.onQuery(query)
+				return this._serialize()
+            })
 		}
 	}
 	
