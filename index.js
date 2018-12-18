@@ -18,13 +18,13 @@ const readFile = (path, encoding) => {
 }
 
 readFile('settings.json', 'utf8').then((str) => {
-	const {asin, queries, booksPath, authCookies} = JSON.parse(str)
+	const {asin, queries, booksPath, auths} = JSON.parse(str)
 
-	const authCookie = _.sample(authCookies)
+	const auth = _.sample(auths)
 
 	console.log(`== booksPath: ${booksPath} ==`);
 	console.log(`== asin: ${asin} ==`);
-	console.log(`== authCookie: ${authCookie} ==`);
+	console.log(`== auth: ${JSON.stringify(auth)} ==`);
 
 	const downloader = new BookDownloader({booksPath, asin})
 	downloader.init().then((value) => {
@@ -35,7 +35,7 @@ readFile('settings.json', 'utf8').then((str) => {
 		return downloader.useSuggestedQueries(50)
 	}).then(() => {
 		downloader.printInfo()
-		return downloader.retrieveImageUrls({authCookie})
+		return downloader.retrieveImageUrls({auth})
 	}).then(() => {
 		downloader.printInfo()
 		return downloader.saveImages()

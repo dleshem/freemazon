@@ -1,6 +1,6 @@
 {
   "name": "freemazon",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Amazon Book Downloader",
   "main": "dist/index.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "mocha": "^2.4.5",
     "webpack": "^1.12.0",
     "request": "^2.70.0",
-    "amazon-sitb": "^2.0.0",
+    "amazon-sitb": "^3.0.0",
     "html-entities": "^1.2.0"
   },
   "dependencies": {},

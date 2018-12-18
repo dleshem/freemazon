@@ -165,13 +165,13 @@ export default class BookDownloader {
 		return Promise.all(useQueryPromises)
 	}
 	
-	retrieveImageUrls({authCookie}) {
+	retrieveImageUrls({auth}) {
 		const goToPagePromises = _.map(this._bookDownloadData.getPageTokens(), (token, page) => {
 			return this._sitb.goToPage({
 				asin: this._asin,
 				page,
 				token,
-				authCookie
+				auth
 			})
 		})
 		
