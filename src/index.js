@@ -1,8 +1,6 @@
-'use strict'
-
 import fs from 'fs'
 import _ from 'lodash'
-import BookDownloader from './src/BookDownloader'
+import BookDownloader from './BookDownloader'
 
 
 const readFile = (path, encoding) => {
