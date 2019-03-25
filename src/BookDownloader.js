@@ -77,9 +77,9 @@ const saveToFile = ({url, pathNoExtension}) => {
 }
 
 export default class BookDownloader {
-	constructor({booksPath, asin}) {
+	constructor({booksPath, asin, timeout = 0}) {
 		this._bookPath = path.join(booksPath, asin)
-		this._sitb = new AmazonSitbClient({})
+		this._sitb = new AmazonSitbClient({timeout})
 		this._asin = asin
 		this._bookDownloadDataPath = null
 		this._bookDownloadData = null

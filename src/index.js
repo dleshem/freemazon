@@ -24,7 +24,7 @@ readFile('settings.json', 'utf8').then((str) => {
 	console.log(`== asin: ${asin} ==`);
 	console.log(`== auth: ${JSON.stringify(auth)} ==`);
 
-	const downloader = new BookDownloader({booksPath, asin})
+	const downloader = new BookDownloader({booksPath, asin, timeout: 10000})
 	downloader.init().then((value) => {
 		downloader.printInfo()
 		return downloader.useQuery(queries[0])
