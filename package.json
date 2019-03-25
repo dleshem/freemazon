@@ -39,7 +39,7 @@
   "dependencies": {
     "lodash": "^4.8.2",
     "request": "^2.70.0",
-    "amazon-sitb": "^3.0.0",
+    "amazon-sitb": "^3.0.1",
     "html-entities": "^1.2.0"
   },
   "directories": {
