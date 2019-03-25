@@ -30,7 +30,7 @@ readFile('settings.json', 'utf8').then((str) => {
 		return downloader.useQuery(queries[0])
 	}).then(() => {
 		downloader.printInfo()
-		return downloader.useSuggestedQueries(50)
+		return downloader.useSuggestedQueries(10)
 	}).then(() => {
 		downloader.printInfo()
 		return downloader.retrieveImageUrls({auth})
