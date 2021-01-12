@@ -37,7 +37,7 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "lodash": "^4.8.2",
+    "lodash": "^4.17.20",
     "request": "^2.88.2",
     "amazon-sitb": "^3.0.1",
     "html-entities": "^1.2.0"
