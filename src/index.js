@@ -16,37 +16,37 @@ const readFile = async (path, encoding) => {
 };
 
 (async () => {
-	try {
-		for (let i = 0; i < 100; ++i) {
+	for (let i = 0; i < 100; ++i) {
+		try {
 			const str = await readFile('settings.json', 'utf8');
 
 			const {asin, queries, booksPath, auths} = JSON.parse(str);
-	
+
 			const auth = _.sample(auths);
-	
+
 			console.log(`== booksPath: ${booksPath} ==`);
 			console.log(`== asin: ${asin} ==`);
 			console.log(`== auth: ${JSON.stringify(auth)} ==`);
-	
-			const downloader = new BookDownloader({booksPath, asin, timeout: 20000});
-	
+
+			const downloader = new BookDownloader({booksPath, asin, timeout: 5000});
+
 			const value = await downloader.init();
 			downloader.printInfo();
-	
+
 			await downloader.addSuggestedQueries(queries);
 			await downloader.useSuggestedQueries(10);
 			downloader.printInfo();
-	
+
 			await downloader.retrieveImageUrls({
 				auth,
-				maxQueries: 5
+				maxQueries: 10
 			});
 			downloader.printInfo();
-	
-			await downloader.saveImages();
+
+			await downloader.saveImages(10);
 			downloader.printInfo();
+		} catch (e) {
+			console.log('error: ', e);
 		}
-	} catch (e) {
-		console.log('error: ', e);
 	}
 })();

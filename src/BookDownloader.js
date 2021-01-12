@@ -196,16 +196,19 @@ export default class BookDownloader {
 		await this._serialize();
 	};
 	
-	async saveImages() {
-		const pageImages = this._bookDownloadData.getPageImages();
-		const saveToFilePromises = _(pageImages)
-			.map((imageUrl, page) => {
-				return saveToFile({
-					url: imageUrl,
-					pathNoExtension: path.join(this._getBookPagesPath(), page)
-				});
-			})
+	async saveImages(maxImages) {
+		const pageImages = _(this._bookDownloadData.getPageImages())
+			.toPairs()
+			.sampleSize(maxImages)
+			.fromPairs()
 			.value();
+
+		const saveToFilePromises = _.map(pageImages, (imageUrl, page) => {
+			return saveToFile({
+				url: imageUrl,
+				pathNoExtension: path.join(this._getBookPagesPath(), page)
+			});
+		});
 		
 		await Promise.all(saveToFilePromises);
 		
