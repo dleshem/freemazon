@@ -1,12 +1,10 @@
 import {AmazonSitbClient} from 'amazon-sitb';
 import BookDownloadData from './BookDownloadData';
-import {Html5Entities} from 'html-entities';
+import {decode} from 'html-entities';
 import request from 'request';
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
-
-const entities = new Html5Entities();
 
 const checkFileExists = async (path) => {
 	return new Promise((resolve, reject) => {
@@ -134,7 +132,7 @@ export default class BookDownloader {
 						[page]: token
 					});
 					
-					sentence = entities.decode(sentence.replace(/<b>/g, '').replace(/<\/b>/g, ''));
+					sentence = decode(sentence.replace(/<b>/g, '').replace(/<\/b>/g, ''));
 					_(sentence.split(' ')).map((word) => {
 						return word.toLowerCase().replace(/[^a-zA-Z0-9'&\\s\\-]/g, '');
 					}).each((normalizedWord) => {

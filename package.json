@@ -40,7 +40,7 @@
     "lodash": "^4.17.20",
     "request": "^2.88.2",
     "amazon-sitb": "^3.0.1",
-    "html-entities": "^1.2.0"
+    "html-entities": "^2.0.2"
   },
   "directories": {
     "test": "test"
