@@ -1,5 +1,6 @@
 import fs from 'fs';
 import _ from 'lodash';
+import {program} from 'commander';
 import BookDownloader from './BookDownloader';
 
 
@@ -15,12 +16,19 @@ const readFile = async (path, encoding) => {
 	});
 };
 
+program
+  .requiredOption('-a, --asin <asin>', 'Amazon Standard Identification Number (ASIN) to download');
+  
+program.parse(process.argv);
+
+const { asin } = program;
+
 (async () => {
 	for (let i = 0; i < 100; ++i) {
 		try {
 			const str = await readFile('settings.json', 'utf8');
 
-			const {asin, queries, booksPath, auths} = JSON.parse(str);
+			const {queries, booksPath, auths} = JSON.parse(str);
 
 			const auth = _.sample(auths);
 
@@ -43,7 +51,7 @@ const readFile = async (path, encoding) => {
 			});
 			downloader.printInfo();
 
-			await downloader.saveImages(10);
+			await downloader.saveImages(5);
 			downloader.printInfo();
 		} catch (e) {
 			console.log('error: ', e);
